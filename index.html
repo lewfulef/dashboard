@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <title>Panel de Clima</title>
+</head>
+
+<body class="flex-colomn min-100-vh">
+  <header class="hero">
+    <h1 class="app-title">
+      <i class="fas fa-cloud-sun-rain"></i> Panel de Clima
+    </h1>
+</header>
+
+
+<main class="flex-row justify-space-between">
+    <div class="col-12 col-sm-12 col-md-4 float-left">
+
+      <div class="card">
+        <h3 class="card-header text-uppercase">Busca una ciudad</h3>
+        <div id="user-form" class="card-body">
+          <input type="text" id="myInput" placeholder="Nombre ciudad"/>
+          <button class="btn" id="searchBtn">Buscar</button>
+        </div>
+      </div>
+
+      <div class="card history">
+        <h3 class="card-header text-uppercase">Historial de busqueda</h3>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-12 col-md-8 float-right">
+      <div>
+        <h2 class="subtitle text-uppercase bg-light">Clima actual</h2>
+        <div class="city"></div>
+      </div>
+
+      <div>
+        <h2 class="subtitle text-uppercase bg-light">Pronóstico de 5 días</h2>
+        <div class="five-day"></div>
+      </div>
+    </div>
+
+ 
+  </main>
+  <audio autoplay="true"><source src="./assets/image/rain.mp3" type="audio/mpeg"></audio>
+
+<footer id="footer">
+  <p>Made by Felipe y Lautaro ajaj</p>      
+</footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
