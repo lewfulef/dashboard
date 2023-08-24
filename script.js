@@ -1,205 +1,107 @@
-// Acceptance Criteria
-// GIVEN a weather dashboard with form inputs
+const cityInput = document.querySelector(".city-input");
+const searchButton = document.querySelector(".search-btn");
+const locationButton = document.querySelector(".locationsearch-btn");
+const currentWeatherDiv = document.querySelector(".current-weather");
+const weatherCardsDiv = document.querySelector(".weather-cards");
 
-// WHEN I search for a city
-// THEN I am presented with current and future conditions for that city and that city is added to the search history
-    
-//function that collect user input and display in search history
-function addResult(){
+const API_KEY = "4974a1ba35a5114946804992d47ea7d8"; // API KEY de OpenWeatherMap API
 
-    inputCity = document.getElementById("myInput").value;  
-    historyList = getInfo();
-    var searchCity =$("<div>") 
-    searchCity.attr('id',inputCity) 
-    searchCity.text(inputCity) 
-    searchCity.addClass("h4")
-
-    
-    if (historyList.includes(inputCity) === false){
-        $(".history").append(searchCity)
+const createWeatherCard = (cityName, weatherItem, index) => {
+    if(index === 0) { //HTML principal de pronostico
+        return `<div class="details">
+                    <h2>${cityName} (${weatherItem.dt_txt.split(" ")[0]})</h2>
+                    <h4>Temperatura: ${(weatherItem.main.temp - 273.15).toFixed(2)}°C</h4>
+                    <h4>Viento: ${weatherItem.wind.speed} M/S</h4>
+                    <h4>Humedad: ${weatherItem.main.humidity}%</h4>                     
+                </div>
+                <div class="icon">
+                <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
+                    <h4>${weatherItem.weather[0].description}</h4>
+                </div>`;
+    } else { //HTML para los otros días
+        return `<li class="card">
+        <h3>(${weatherItem.dt_txt.split(" ")[0]})</h3>
+        <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="weather-icon">
+        <h4>Temp: ${(weatherItem.main.temp - 273.15).toFixed(2)}°C</h4>
+        <h4>Viento: ${weatherItem.wind.speed} M/S</h4>
+        <h4>Humedad: ${weatherItem.main.humidity}%</h4> 
+</li>`;
     }
-    $(".subtitle").attr("style","display:inline")
-    addInfo(inputCity);
     
-}; 
+};
 
-//add event listener to search history item
-$(".history").on('click', function(event){
-    event.preventDefault();
-    $(".subtitle").attr("style","display:inline")
-     document.getElementById("myInput").value =  event.target.id;
-    getResult(); 
-});
+const getWeatherDetails = (cityName, lat, lon) => {
+    const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast/?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
-//add event listner to search button
-document.getElementById("searchBtn").addEventListener("click", addResult);
-document.getElementById("searchBtn").addEventListener('click', getResult);
+    fetch(WEATHER_API_URL).then (res => res.json()).then(data => {
+        //Filtro de pronosticos por día
+        const uniqueForecastDays = [];
+        const fiveDaysForecast = data.list.filter (forecast => {
+            const forecastDate = new Date(forecast.dt_txt).getDate();
+            if(!uniqueForecastDays.includes(forecastDate)) {
+                return uniqueForecastDays.push(forecastDate);
+            }
+        });
 
-// WHEN I view current weather conditions for that city
-// THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-function getResult(){   
+        //Limpiando datos anteriores
+        cityInput.value = "";
+        currentWeatherDiv.innerHTML = "";
+        weatherCardsDiv.innerHTML = "";
 
-    $(".five-day").empty();
-    $(".city").empty()
 
-   inputCity = document.getElementById("myInput").value;   
-    var countryCode='US';    
-    var cityCode=inputCity;       
-    
-    var geoLon;   
-    var geoLat;
-        
-    var cityName =$("<h>")    
-    cityName.addClass("h3")  
-    var temp = $("<div>")    
-    var wind = $("<div>")    
-    var humidity = $("<div>")   
-    var uvIndex = $("<div>")  
-    var icon =$("<img>")
-    icon.addClass("icon");    
-    var dateTime = $("<div>")
-
-    $(".city").addClass("list-group")
-    $(".city").append(cityName)    
-    $(".city").append(dateTime)    
-    $(".city").append(icon)    
-    $(".city").append(temp)    
-    $(".city").append(wind)    
-    $(".city").append(humidity)    
-    $(".city").append(uvIndex)
-    
-    
-    var geoUrl = 'http://dataservice.accuweather.com/locations/v1/cities/search'
-        
-    //We then pass the requestUrl variable as an argument to the fetch() method, like in the following code:    
-      fetch(geoUrl)
-    
-        //Convert the response into JSON. Lastly, we return the JSON-formatted response, as follows:
-        .then(function (response) {
-          return response.json();
-        })
-    
-        .then(function (data) {
-          geoLon = data[0].lon;
-          geoLat = data[0].lat;
-    
-          //use geoLat and geoLon to fetch the current weather
-          var weatherUrl = 'http://dataservice.accuweather.com/locations/v1/cities/search'
-            
-          fetch(weatherUrl)
-
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (data) {
-            // console.log(data)
-            
-            weatherIcon= data.current.weather[0].icon;
-            imgSrc = "https://openweathermap.org/img/wn/" + weatherIcon + ".png";
-            icon.attr('src',imgSrc)
-        
-            cityName.text(cityCode);
-            //translate utc to date
-            var date = new Date(data.current.dt * 1000);
-            dateTime.text("("+ (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear() + ")");
-
-            temp.text("Temperature: "+ data.current.temp + " F");
-            humidity.text("Humidity: " + data.current.humidity + " %");
-            wind.text("Wind Speed: " + data.current.wind_speed + " MPH");
-
-            // WHEN I view the UV index
-            // THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe    
-            var uvi =$("<div>")
-            uvIndex.text("UV Index: ");
-            uvi.text(data.current.uvi)
-            uvIndex.append(uvi)
-            uvIndex.addClass("d-flex")
-            
-            if (data.current.uvi < 3){
-                uvi.attr("style","background-color:green; color:black; margin-left: 5px")
-            } else if (data.current.uvi < 6){
-                uvi.attr("style","background-color:yellow; color:black; margin-left: 5px")
-            } else if (data.current.uvi < 8){
-                uvi.attr("style","background-color:orange; color:black; margin-left: 5px")
-            } else if (data.current.uvi < 11) {
-                uvi.attr("style","background-color:red; color:black; margin-left: 5px")
+        //Se crean tarjetas y se agregan al DOM
+        fiveDaysForecast.forEach((weatherItem, index) => {
+            if(index === 0) {
+                currentWeatherDiv.insertAdjacentHTML("beforeend", createWeatherCard(cityName, weatherItem, index));
             } else {
-                uvi.attr("style","background-color:purple; color:black; margin-left: 5px")
+                weatherCardsDiv.insertAdjacentHTML("beforeend", createWeatherCard(cityName, weatherItem, index)); 
             }
+                        
+        });
+    }).catch(() => {
+        alert("An error occurred while fetching the weather forecast!");
+    });
 
-            // WHEN I view future weather conditions for that city
-            // THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, and the humidity
-            //using the data from previous fetch and display the 5 day weather data
-            for (var i=1;i<6;i++){
-
-                var blueContainer = $("<div>")
-                this["futureDate"+i] = $("<h>")
-                this["futureIcon"+i] = $("<img>")
-                this["futureTemp"+i] = $("<div>")
-                this["futureWind"+i] = $("<div>")
-                this["futureHumidity"+i] = $("<div>")
-                //translate utc to date
-                this["forecastDay"+i] = new Date(data.daily[i].dt * 1000);     
-     
-                (this["futureDate"+i]).text(((this["forecastDay"+i]).getMonth()+1) + "/" + (this["forecastDay"+i]).getDate() + "/" + (this["forecastDay"+i]).getFullYear());
-                (this["futureTemp"+i]).text("Temperature: "+ data.daily[i].temp.day + " F");
-                (this["futureWind"+i]).text("Wind: "+ data.daily[i].wind_speed+ " MPH");
-                (this["futureHumidity"+i]).text("Humidity: " + data.daily[i].humidity + " %");
-                (this["weatherIcon"+i])= data.daily[i].weather[0].icon;
-        
-                DateimgSrc = "https://openweathermap.org/img/wn/" + (this["weatherIcon"+i]) + ".png";  
-                (this["futureIcon"+i]).attr('src',DateimgSrc)
-
-                $(".five-day").append(blueContainer)
-                blueContainer.append((this["futureDate"+i]));
-                blueContainer.append((this["futureIcon"+i]));
-                blueContainer.append((this["futureTemp"+i]));
-                blueContainer.append((this["futureWind"+i]));
-                blueContainer.append((this["futureHumidity"+i]));
-
-                blueContainer.addClass("weather-card")
-            }
-
-          })
-    })
 }
 
-// WHEN I click on a city in the search history
-// THEN I am again presented with current and future conditions for that city
 
-//get local storage info
-function getInfo() {
-    var currentList =localStorage.getItem("city");
-    if (currentList !== null ){
-        freshList = JSON.parse(currentList);
-        return freshList;
-    } else {
-        freshList = [];
-    }
-    return freshList;
+const getCityCoordinates = () => {
+    const cityName = cityInput.value.trim(); //Usar nombre de ciudad completo, se eliminaran espacios de sobra
+    if(!cityName) return; // Volver a principal si no hay nombre escrito
+    const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_KEY}`;
+
+    //Obtener coordenadas de ciudades (longitud,latitud y nombre) de API response
+    fetch(GEOCODING_API_URL).then(res => res.json()).then(data => {
+        if(!data.length) return alert(`No coordinates found for ${cityName}`);
+        const { name, lat, lon } = data[0];
+        getWeatherDetails (name, lat, lon);
+    }).catch(() => {
+        alert("An error occurred while fetching the coordinates");        
+    });
 }
-//add info to local
-function addInfo (n) {
-    var addedList = getInfo();
 
-    if (historyList.includes(inputCity) === false){
-        addedList.push(n);
-    }
-   
-    localStorage.setItem("city", JSON.stringify(addedList));
-};
-//render history
-function renderInfo () {
-    var historyList = getInfo();
-    for (var i = 0; i < historyList.length; i++) {
-        var inputCity = historyList[i];
-        var searchCity =$("<div>") 
-        searchCity.attr('id',inputCity) 
-        searchCity.text(inputCity) 
-        searchCity.addClass("h4")
+const getUserCoordinates = () => {
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            const { latitude, longitude } = position.coords; // Obtener coordenadas de locación
+            const REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=&appid=${API_KEY}`;
+            
+            //obtener ciudad por coordenadas, utilizando reverse geocoding API
+            fetch(REVERSE_GEOCODING_URL).then(res => res.json()).then(data => {
+                const { name } = data[0];
+                getWeatherDetails (name, latitude, longitude);
+            }).catch(() => {
+                alert("An error occurred while fetching the city");        
+            });      
+        },
+        error => {//Mostrar alerta al usuario por permisos de localización denegada
+            if(error.code === error.PERMISSION_DENIED){
+                alert("Geolocation request denied. Please reset location permussion to grant access")
+            }
+        }
+    );
+}
 
-        $(".history").append(searchCity)
-    }
-};
+locationButton.addEventListener("click", getUserCoordinates);
+searchButton.addEventListener("click", getCityCoordinates);
 
-renderInfo();

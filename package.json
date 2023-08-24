@@ -1,0 +1,19 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard",
+  "main": "script.js",
+  "scripts": {
+    "test": "Dashboard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lewfulef/dashboard.git"
+  },
+  "author": "Vicente Lautaro Huichalaf  -  Felipe García-Rey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lewfulef/dashboard/issues"
+  },
+  "homepage": "https://github.com/Lewfulef/dashboard#readme"
+}
