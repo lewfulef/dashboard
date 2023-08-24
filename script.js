@@ -33,7 +33,9 @@ const createWeatherCard = (cityName, weatherItem, index) => {
 const getWeatherDetails = (cityName, lat, lon) => {
     const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast/?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
-    fetch(WEATHER_API_URL).then (res => res.json()).then(data => {
+    fetch(WEATHER_API_URL)
+        .then(res => res.json())
+        .then(data => {
         //Filtro de pronosticos por día
         const uniqueForecastDays = [];
         const fiveDaysForecast = data.list.filter (forecast => {
@@ -61,42 +63,20 @@ const getWeatherDetails = (cityName, lat, lon) => {
     }).catch(() => {
         alert("An error occurred while fetching the weather forecast!");
     });
+    // Preparar datos para el gráfico
+    const labels = [];
+    const temperatures = [];
 
-}
-
-
-const getCityCoordinates = () => {
-    const cityName = cityInput.value.trim(); //Usar nombre de ciudad completo, se eliminaran espacios de sobra
-    if(!cityName) return; // Volver a principal si no hay nombre escrito
-    const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_KEY}`;
-
-    //Obtener coordenadas de ciudades (longitud,latitud y nombre) de API response
-    fetch(GEOCODING_API_URL).then(res => res.json()).then(data => {
-        if(!data.length) return alert(`No coordinates found for ${cityName}`);
-        const { name, lat, lon } = data[0];
-        getWeatherDetails (name, lat, lon);
-    }).catch(() => {
-        alert("An error occurred while fetching the coordinates");        
-    });
-}
-searchButton.addEventListener("click", getCityCoordinates);
-
-// Dentro de la función getWeatherDetails, después de crear las tarjetas HTML
-
-// Preparar datos para el gráfico
-const labels = [];
-const temperatures = [];
-
-fiveDaysForecast.forEach((weatherItem, index) => {
-    labels.push(new Date(weatherItem.dt_txt));
-    temperatures.push((weatherItem.main.temp - 273.15).toFixed(2));
+    fiveDaysForecast.forEach((weatherItem, index) => {
+        labels.push(new Date(weatherItem.dt_txt));
+        temperatures.push((weatherItem.main.temp - 273.15).toFixed(2));
 });
 
 // Configuración de los datos y opciones del gráfico
 const chartData = {
-    labels: labels,
+    labels: 'Temperatura (°C), Viento, Humedad',
     datasets: [{
-        label: 'Temperatura (°C)',
+        label: 'Temperatura (°C), Viento, Humedad',
         data: temperatures,
         borderColor: 'blue',
         fill: false
@@ -126,3 +106,21 @@ new Chart(chartCtx, {
     data: chartData,
     options: chartOptions
 });
+}
+
+
+const getCityCoordinates = () => {
+    const cityName = cityInput.value.trim(); //Usar nombre de ciudad completo, se eliminaran espacios de sobra
+    if(!cityName) return; // Volver a principal si no hay nombre escrito
+    const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_KEY}`;
+
+    //Obtener coordenadas de ciudades (longitud,latitud y nombre) de API response
+    fetch(GEOCODING_API_URL).then(res => res.json()).then(data => {
+        if(!data.length) return alert(`No coordinates found for ${cityName}`);
+        const { name, lat, lon } = data[0];
+        getWeatherDetails (name, lat, lon);
+    }).catch(() => {
+        alert("An error occurred while fetching the coordinates");        
+    });
+}
+searchButton.addEventListener("click", getCityCoordinates);

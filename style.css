@@ -20,6 +20,14 @@ h1 {
     gap: 35px;
     padding: 30px;
 }
+.chart-container {
+    width: 100%; /* Ajusta el ancho según sea necesario */
+    max-width: 600px; /* Puedes ajustar el ancho máximo */
+    margin: 20px auto; /* Centra el contenedor en la página */
+    border: 1px solid #ccc; /* Agrega un borde opcional */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Agrega una sombra opcional */
+    padding: 10px; /* Agrega un espacio alrededor del gráfico */
+}
 .weather-input {
     width: 550px;
 }
