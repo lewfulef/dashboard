@@ -6,14 +6,14 @@
     font-family:sans-serif, 'Open Sans';
 }
 body {
-    background: #E2F2FD;
+    background: #c6c7c8;
 }
 h1 {
     color: #fff;
     padding: 18px 0;
     text-align: center;
     font-size: 1.75rem;
-    background: #5372F0;
+    background: #255bc6;
 }
 .container {
     display: flex;
@@ -31,24 +31,7 @@ h1 {
     margin: 10px 0 15px 0;
     font-size: 1.07rem;
     border-radius: 4px;
-    border: 1px solid #ccc;
-}
-.weather-input .separator{
-    height: 1px;
-    width: 100%;
-    margin: 25px 0;
-    background: #bbb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.weather-input .separator::before{
-    content:"o";
-    color: #6C757D;
-    font-size: 1.18rem;
-    padding: 0 15px;
-    margin-top: -4px;
-    background: #e3f2fd;
+    border: 1px solid #171717;
 }
 .weather-input button{
     width: 100%;
@@ -59,10 +42,7 @@ h1 {
     color: #fff;
     font-size: 1rem;
     border-radius: 4px;
-    background: #5372f0;
-}
-.weather-input .location-btn {
-    background: #525050;
+    background: #255bc6;
 }
 .weather-data {
     width: 100%;
@@ -72,7 +52,7 @@ h1 {
     display: flex;
     border-radius: 5px;
     padding: 20px 70px 20px 20px;
-    background: #5372F0;
+    background: #255bc6;
     justify-content: space-between;
 }
 .current-weather h2 {
@@ -107,7 +87,7 @@ h1 {
     color: #fff;
     padding: 18px 16px;
     border-radius: 5px;
-    background: #6c757d;
+    background: #3f5b74;
     width: calc(100% / 5);
 }
 .weather-cards .card img {

@@ -79,29 +79,50 @@ const getCityCoordinates = () => {
         alert("An error occurred while fetching the coordinates");        
     });
 }
-
-const getUserCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(
-        position => {
-            const { latitude, longitude } = position.coords; // Obtener coordenadas de locación
-            const REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=&appid=${API_KEY}`;
-            
-            //obtener ciudad por coordenadas, utilizando reverse geocoding API
-            fetch(REVERSE_GEOCODING_URL).then(res => res.json()).then(data => {
-                const { name } = data[0];
-                getWeatherDetails (name, latitude, longitude);
-            }).catch(() => {
-                alert("An error occurred while fetching the city");        
-            });      
-        },
-        error => {//Mostrar alerta al usuario por permisos de localización denegada
-            if(error.code === error.PERMISSION_DENIED){
-                alert("Geolocation request denied. Please reset location permussion to grant access")
-            }
-        }
-    );
-}
-
-locationButton.addEventListener("click", getUserCoordinates);
 searchButton.addEventListener("click", getCityCoordinates);
 
+// Dentro de la función getWeatherDetails, después de crear las tarjetas HTML
+
+// Preparar datos para el gráfico
+const labels = [];
+const temperatures = [];
+
+fiveDaysForecast.forEach((weatherItem, index) => {
+    labels.push(new Date(weatherItem.dt_txt));
+    temperatures.push((weatherItem.main.temp - 273.15).toFixed(2));
+});
+
+// Configuración de los datos y opciones del gráfico
+const chartData = {
+    labels: labels,
+    datasets: [{
+        label: 'Temperatura (°C)',
+        data: temperatures,
+        borderColor: 'blue',
+        fill: false
+    }]
+};
+
+const chartOptions = {
+    scales: {
+        x: {
+            type: 'time',
+            time: {
+                unit: 'day'
+            }
+        },
+        y: {
+            beginAtZero: true
+        }
+    }
+};
+
+// Obtener el contexto del lienzo para el gráfico
+const chartCtx = document.getElementById('weatherChart').getContext('2d');
+
+// Crear el gráfico utilizando Chart.js
+new Chart(chartCtx, {
+    type: 'line',
+    data: chartData,
+    options: chartOptions
+});
