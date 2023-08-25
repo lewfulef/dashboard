@@ -10,10 +10,13 @@
     "type": "git",
     "url": "git+https://github.com/Lewfulef/dashboard.git"
   },
-  "author": "Vicente Lautaro Huichalaf  -  Felipe García-Rey",
+  "author": "Lautaro Huichalaf  -  Felipe García-Rey",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Lewfulef/dashboard/issues"
   },
-  "homepage": "https://github.com/Lewfulef/dashboard#readme"
+  "homepage": "https://github.com/Lewfulef/dashboard#readme",
+  "dependencies": {
+    "chart.js": "^4.4.0"
+  }
 }

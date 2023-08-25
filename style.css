@@ -5,13 +5,13 @@
     box-sizing: border-box;
     font-family:sans-serif, 'Open Sans';
 }
-body {
-    background: #c6c7c8;
+body { 
+    background: #c6d9eb;
 }
 h1 {
     color: #fff;
     padding: 18px 0;
-    text-align: center;
+    text-align: left;
     font-size: 1.75rem;
     background: #255bc6;
 }

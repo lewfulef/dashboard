@@ -4,6 +4,7 @@ const locationButton = document.querySelector(".locationsearch-btn");
 const currentWeatherDiv = document.querySelector(".current-weather");
 const weatherCardsDiv = document.querySelector(".weather-cards");
 
+
 const API_KEY = "4974a1ba35a5114946804992d47ea7d8"; // API KEY de OpenWeatherMap API
 
 const createWeatherCard = (cityName, weatherItem, index) => {
@@ -27,7 +28,6 @@ const createWeatherCard = (cityName, weatherItem, index) => {
         <h4>Humedad: ${weatherItem.main.humidity}%</h4> 
 </li>`;
     }
-    
 };
 
 const getWeatherDetails = (cityName, lat, lon) => {
@@ -92,37 +92,8 @@ fiveDaysForecast.forEach((weatherItem, index) => {
     temperatures.push((weatherItem.main.temp - 273.15).toFixed(2));
 });
 
-// Configuración de los datos y opciones del gráfico
-const chartData = {
-    labels: labels,
-    datasets: [{
-        label: 'Temperatura (°C)',
-        data: temperatures,
-        borderColor: 'blue',
-        fill: false
-    }]
-};
+// Codigo de gráfica
 
-const chartOptions = {
-    scales: {
-        x: {
-            type: 'time',
-            time: {
-                unit: 'day'
-            }
-        },
-        y: {
-            beginAtZero: true
-        }
-    }
-};
 
-// Obtener el contexto del lienzo para el gráfico
-const chartCtx = document.getElementById('weatherChart').getContext('2d');
 
-// Crear el gráfico utilizando Chart.js
-new Chart(chartCtx, {
-    type: 'line',
-    data: chartData,
-    options: chartOptions
-});
+
