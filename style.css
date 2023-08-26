@@ -163,35 +163,8 @@ h1{
     background-color: #5372F0;
     text-align: center;
     position: relative;
-    margin-top: 0px;
 }
 
-.texto-footer {
-    display: center;
-    align-items: center;
-    margin: 40px 40px 40px 40px;
-    padding-top: 40px;
-    color: #fff;
-}
-
-.canvas-container {
-    display: flex;
-    border-radius: 5px;
-    margin: 30px 40px 30px 40px ;
-    background-color: #fff;
-    color: #5372F0;
-    border: 1px solid;
-    
-}
-
-.footer {
-    display: center;
-    align-items: center;
-    height: 100px;
-    width: 100%;
-    background-color: #5372F0;
-    text-align: center;
-}
 .texto-footer {
     display: center;
     align-items: center;
