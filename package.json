@@ -1,0 +1,19 @@
+{
+  "name": "dashboard",
+  "version": "1.5.0",
+  "description": "Panel de pronostico del tiempo",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lewfulef/dashboard.git"
+  },
+  "author": "Lautaro Huichalaf  -  Felipe García-Rey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lewfulef/dashboard/issues"
+  },
+  "homepage": "https://github.com/Lewfulef/dashboard#readme"
+}
