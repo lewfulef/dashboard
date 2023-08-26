@@ -105,16 +105,7 @@ const getCityCoordinates = () => {
     }).catch(( ) => {
         alert("¡Ocurrió un error mientras se buscaban las coordenadas!")
     });
-}
-
-// Agrega el evento click al botón de búsqueda fuera de la función getCityCoordinates
-searchButton.addEventListener("click", () => {
-    const cityName = cityInput.value.trim();
-    if (cityName) {
-        getCityCoordinates(cityName);
-    }
-})
- 
+}; 
 const getUserCoordinates = () => {
     navigator.geolocation.getCurrentPosition(
         position => {
