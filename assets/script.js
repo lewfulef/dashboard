@@ -34,7 +34,9 @@ const createWeatherCard = (cityName, weatherItem, index) => {
 const getWeatherDetails = (cityName, lat, lon) => {
     const WEATHER_API_URL = ` http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
-    fetch(WEATHER_API_URL).then(res => res.json()).then(data =>{ 
+    fetch(WEATHER_API_URL)
+    .then(res => res.json())
+    .then(data =>{ 
         // Filtra el pronóstico para tener sólo uno por día
         const uniqueForecastDays = [];
         const fiveDaysForecast = data.list.filter(forecast => {
@@ -58,12 +60,38 @@ const getWeatherDetails = (cityName, lat, lon) => {
             else{
                 weatherCardsDiv.insertAdjacentHTML("beforeend", createWeatherCard(cityName, weatherItem, index));
             }
-            
         });
-    }).catch(() => {
-        alert("¡Ocurrió un error mientras se buscaba el pronóstico del clima!")
+        // Crear el gráfico aquí
+        const temperatures = fiveDaysForecast.map(weatherItem => (weatherItem.main.temp - 273.15).toFixed(2));
+        const dates = fiveDaysForecast.map(weatherItem => weatherItem.dt_txt.split(" ")[0]);
+
+        const ctx = document.getElementById("weatherChart").getContext("2d");
+        const weatherChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "Temperature (°C)",
+                    data: temperatures,
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    })
+    .catch(() => {
+        alert("¡Ocurrió un error mientras se buscaba el pronóstico del clima!");
     });
 }
+
 
 const getCityCoordinates = () => {
     const cityName = cityInput.value.trim(); //  Get user entered city name and remove extra spaces.
@@ -78,6 +106,14 @@ const getCityCoordinates = () => {
         alert("¡Ocurrió un error mientras se buscaban las coordenadas!")
     });
 }
+
+// Agrega el evento click al botón de búsqueda fuera de la función getCityCoordinates
+searchButton.addEventListener("click", () => {
+    const cityName = cityInput.value.trim();
+    if (cityName) {
+        getCityCoordinates(cityName);
+    }
+})
  
 const getUserCoordinates = () => {
     navigator.geolocation.getCurrentPosition(
