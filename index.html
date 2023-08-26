@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Pronóstico del tiempo</title>
+    <script src="script.js" defer></script>
+    <script></script>
+</head>
+<body>
+    <h1>Pronóstico del tiempo</h1>
+         <div class="container">
+         <div class="weather-input">
+            <h3>Ingrese nombre de Ciudad</h3>
+            <input class="city-input" type="text" placeholder="Ej. Santiago, Temuco, Mendoza, Lima">
+            <button class="search-btn">Buscar</button>  
+            <div class="separator"></div>
+            <button class="location-btn">Usar ubicación actual</button>
+        </div>
+        <div class="weather-data">
+            <div class="current-weather">
+                <div class="details">
+                    <h2>____ (____)</h2>
+                    <h4>Temperatura: ____°C</h4>
+                    <h4>Viento: ____ M/S</h4>
+                    <h4>Humedad: ____%</h4>                    
+                </div>
+                <div class="icon">
+                    <img src="http://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
+                    <h4>Moderate Rain</h4>
+                </div>
+            </div>
+            <div class="days-forecast">
+                <h2>Pronostico - 5 días</h2>
+                <ul class="weather-cards">
+                    <li class="card">
+                        <h3>(____)</h3>
+                        <h4>Temp: ____°C</h4>
+                        <h4>Viento: ____ M/S</h4>
+                        <h4>Humedad: ____</h4> 
+                    </li>
+                    <li class="card">
+                        <h3>(____)</h3>
+                        <h4>Temp: ____°C</h4>
+                        <h4>Viento: ____ M/S</h4>
+                        <h4>Humedad: ____</h4> 
+                    </li>
+                    <li class="card">
+                        <h3>(____)</h3>
+                        <h4>Temp: ____°C</h4>
+                        <h4>Viento: ____ M/S</h4>
+                        <h4>Humedad: ____</h4> 
+                    </li>
+                    <li class="card">
+                        <h3>(____)</h3>
+                        <h4>Temp: ____°C</h4>
+                        <h4>Viento: ____ M/S</h4>
+                        <h4>Humedad: ____</h4> 
+                    </li>
+                    <li class="card">
+                        <h3>(____)</h3>
+                         <h4>Temp: ____°C</h4>
+                        <h4>Viento: ____ M/S</h4>
+                        <h4>Humedad: ____</h4> 
+                    </li>
+                        
+                </ul>
+            </div>
+        </div>
+        <div>
+            <canvas class="chart-container"></canvas>
+        </div>
+    </div>
+</body>
+</html>
