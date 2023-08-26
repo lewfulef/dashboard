@@ -14,9 +14,11 @@
          <div class="weather-input">
             <h3>Ingrese nombre de Ciudad</h3>
             <input class="city-input" type="text" placeholder="Ej. Santiago, Temuco, Mendoza, Lima">
-            <button class="search-btn">Buscar</button>  
+            <button class="search-btn">Buscar</button>
             <div class="separator"></div>
-            <button class="location-btn">Usar ubicación actual</button>
+            <div class="canvas-container">
+                <canvas class="canvas" id="weatherChart"></canvas>
+            </div>
         </div>
         <div class="weather-data">
             <div class="current-weather">
@@ -27,12 +29,14 @@
                     <h4>Humedad: ____%</h4>                    
                 </div>
                 <div class="icon">
-                    <img src="http://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
+                    <img src="httpS://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
                     <h4>Moderate Rain</h4>
                 </div>
             </div>
+            <br>
             <div class="days-forecast">
-                <h2>Pronostico - 5 días</h2>
+                <h2>Pronostico proximos 4 días</h2>
+                <br>
                 <ul class="weather-cards">
                     <li class="card">
                         <h3>(____)</h3>
@@ -58,19 +62,21 @@
                         <h4>Viento: ____ M/S</h4>
                         <h4>Humedad: ____</h4> 
                     </li>
-                    <li class="card">
-                        <h3>(____)</h3>
-                         <h4>Temp: ____°C</h4>
-                        <h4>Viento: ____ M/S</h4>
-                        <h4>Humedad: ____</h4> 
-                    </li>
-                        
                 </ul>
             </div>
         </div>
-        <div>
-            <canvas id="weatherChart"></canvas>
-        </div>
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+<footer class="footer">
+   <div class="texto-footer">Proyecto 3: Dashboard pronóstico del tiempo ©
+    <br>Fullstack C8 - Bootcamp UDD 2023 / Lautaro Huichalaf - Felipe García-Rey
+   </div>
+</footer>
 </body>
 </html>

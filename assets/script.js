@@ -6,6 +6,8 @@ const weatherCardsDiv = document.querySelector(".weather-cards")
 
 const API_KEY = "f3d17631323dbe3c801b2f0fced3968e" // API key for OpenWeatherMap API
 
+let weatherChart;
+
 const createWeatherCard = (cityName, weatherItem, index) => {
     if(index === 0) { // HTML para la tarjeta meteoroñogica principal
         return `<div class="details">
@@ -15,24 +17,22 @@ const createWeatherCard = (cityName, weatherItem, index) => {
                      <h4>Humedad: ${weatherItem.main.humidity}%</h4>                     
                 </div>
                 <div class="icon">
-                <img src="http://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
+                <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
                 <h4>${weatherItem.weather[0].description}</h4>
             </div>
         `;
     } else {return `<li class="card">
                 <h3>(${weatherItem.dt_txt.split(" ")[0]})</h3>
-                <img src="http://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="">
+                <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="">
                 <h4>Temp: ${(weatherItem.main.temp - 273.15).toFixed(2)}°C</h4>
                 <h4>Viento: ${weatherItem.wind.speed} M/S</h4>
                 <h4>Humedad: ${weatherItem.main.humidity} %</h4> 
             </li>`;
-
-    }
-    
+    } 
 }
 
 const getWeatherDetails = (cityName, lat, lon) => {
-    const WEATHER_API_URL = ` http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+    const WEATHER_API_URL = ` https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
     fetch(WEATHER_API_URL)
     .then(res => res.json())
@@ -61,21 +61,30 @@ const getWeatherDetails = (cityName, lat, lon) => {
                 weatherCardsDiv.insertAdjacentHTML("beforeend", createWeatherCard(cityName, weatherItem, index));
             }
         });
+        
+        // Destruir el gráfico anterior si existe
+        if (weatherChart) {
+            weatherChart.destroy();
+        }
+        
         // Crear el gráfico aquí
         const temperatures = fiveDaysForecast.map(weatherItem => (weatherItem.main.temp - 273.15).toFixed(2));
         const dates = fiveDaysForecast.map(weatherItem => weatherItem.dt_txt.split(" ")[0]);
 
         const ctx = document.getElementById("weatherChart").getContext("2d");
-        const weatherChart = new Chart(ctx, {
+
+        weatherChart = new Chart(ctx, {
             type: "line",
             data: {
                 labels: dates,
                 datasets: [{
                     label: "Temperature (°C)",
                     data: temperatures,
-                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderColor: "rgba(255, 99, 71, 0.6)",
                     backgroundColor: "rgba(75, 192, 192, 0.2)",
-                    borderWidth: 1
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
                 }]
             },
             options: {
@@ -92,32 +101,60 @@ const getWeatherDetails = (cityName, lat, lon) => {
     });
 }
 
+// Agregar el evento de escucha de teclado para la tecla "Enter"
+cityInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Evita el comportamiento por defecto del Enter (enviar formulario)
+        getCityCoordinates();
+    }
+});
 
-const getCityCoordinates = () => {
-    const cityName = cityInput.value.trim(); //  Get user entered city name and remove extra spaces.
-    if(!cityName) return; // Return if cityName is 
-    const GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_KEY}`;
-
-    fetch(GEOCODING_API_URL).then(res => res.json()).then( data => {
-        if(!data.length) return alert(`No se han encontrado coordenadas para ${cityName}`)
-        const { name, lat, lon } = data[0];
-        getWeatherDetails(name, lat, lon);
-    }).catch(( ) => {
-        alert("¡Ocurrió un error mientras se buscaban las coordenadas!")
-    });
-}; 
-const getUserCoordinates = () => {
+// Función para obtener las coordenadas del usuario al cargar la página
+const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition(
         position => {
-            console.log(position);
+            const { latitude, longitude } = position.coords;
+            getCityNameFromCoordinates(latitude, longitude);
         }, 
         error => {
-            if(error.code === error.PERMISSION_DENIED){
-                alert("Geolocation request denied. Please reset location")
+            if (error.code === error.PERMISSION_DENIED) {
+                alert("Geolocation request denied. Please reset location");
             }
         }
     );
+};
+
+// Función para obtener el nombre de la ciudad a partir de las coordenadas
+const getCityNameFromCoordinates = (latitude, longitude) => {
+    const GEOCODING_REVERSE_API_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_KEY}`;
+
+    fetch(GEOCODING_REVERSE_API_URL)
+        .then(res => res.json())
+        .then(data => {
+            const cityName = data.length > 0 ? data[0].name : "Unknown Location";
+            getWeatherDetails(cityName, latitude, longitude);
+        })
+        .catch(() => {
+            getWeatherDetails("Unknown Location", latitude, longitude);
+        });
+};
+
+// Llamada inicial para obtener el clima y los gráficos al cargar la página
+getUserLocation();
+
+// Función para obtener las coordenadas de la ciudad
+const getCityCoordinates = () => {
+    const cityName = cityInput.value.trim();
+    if (!cityName) return;
+    const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_KEY}`;
+
+    fetch(GEOCODING_API_URL).then(res => res.json()).then( data => {
+        if (!data.length) return alert(`No se han encontrado coordenadas para ${cityName}`);
+        const { name, lat, lon } = data[0];
+        getWeatherDetails(name, lat, lon);
+    }).catch(() => {
+        alert("¡Ocurrió un error mientras se buscaban las coordenadas!");
+    });
 }
 
-locationButton.addEventListener("click", getUserCoordinates)
 searchButton.addEventListener("click", getCityCoordinates)
